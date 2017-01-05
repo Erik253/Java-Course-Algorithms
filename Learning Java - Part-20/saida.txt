@@ -1,0 +1,2 @@
+Linha numero 1: Estou lendo do arquivo :)
+Linha numero 2: Varias linhas!xxx
