@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html" 
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	  
+	<ui:composition template="_template.xhtml">
+		
+		<ui:define name="titulo">
+			Novo Livro
+		</ui:define>
+
+
+		<ui:define name="conteudo">
+
+			<h:form id="formularioDoLivro">
+			
+
+				<h:messages id="exibidorDeMensagensDeErro"/>
+			
+
+				<fieldset>
+					<legend>Dados do Livro</legend>
+					
+					<h:panelGrid columns="2">
+		
+						<h:outputLabel value="Titulo:"             for="titulo" />
+						<h:inputText   id="titulo"                 value="#{livroBean.livro.titulo}"  required="true" requiredMessage="Necessario preencher o campo titulo!" validatorMessage="O tamanho maximo permitido no campo titulo eh de 20 caracteres">
+						
+							<f:validateLength maximum="20"/>
+							
+							<f:ajax event="blur" render="exibidorDeMensagensDeErro" />
+														
+						</h:inputText>
+						
+						
+						
+						<h:outputLabel value="ISBN:"               for="isbn" />
+						<h:inputText   id="isbn"                   value="#{livroBean.livro.isbn}"  validator="#{livroBean.comecaComDigitoUm}">
+						
+							<f:ajax event="keypress" render="exibidorDeMensagensDeErro"/>
+						
+						</h:inputText>
+		
+		
+						<h:outputLabel value="Preço:"              for="preco" />
+						<h:inputText   id="preco"                  value="#{livroBean.livro.preco}" />
+		
+		
+		
+						<h:outputLabel value="Data de Lançamento:" for="dataLancamento" />
+
+						<h:inputText   id="dataLancamento"         value="#{livroBean.livro.dataLancamento.time}">
+
+							<f:convertDateTime id="conversorDeData" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+						
+						</h:inputText>
+						
+		
+					</h:panelGrid>
+					
+				</fieldset>
+		
+		
+		
+		
+		        <!-- Definine uma parte do formulario -->
+				<fieldset>
+				
+					<legend>Dados do Autor</legend>
+					
+					<h:outputLabel value="Selecione os Autores desse livro: "  for="comboBoxAutor" />
+					
+
+					<h:selectOneMenu id="comboBoxAutor" value="#{livroBean.autorId}">
+					
+						<f:selectItems id="itemsDoComboBox" value="#{livroBean.getAutores()}" var="itemAtual" itemLabel="#{itemAtual.nome}" itemValue="#{itemAtual.id}" />
+					
+					</h:selectOneMenu>
+					
+					
+
+					<h:commandButton id="btnGravarAutor" value="Gravar Autor"  action="#{livroBean.gravarAutor}">
+				
+						<f:ajax execute="comboBoxAutor" render="dataTableAutor"/>
+							
+				    </h:commandButton>
+				
+					<br/>
+
+					<h:commandLink value="Cadastrar novo autor" action="#{livroBean.formAutor}" immediate="true"/>
+				
+
+					<h:dataTable id="dataTableAutor" value="#{livroBean.autoresDoLivro}"  var="itemAtual">
+					
+						<h:column>
+							<h:outputText value="#{itemAtual.nome}" />
+						</h:column>
+						
+						<h:column>
+							<h:commandLink  id="btnRemoverAutor" value="remover" action="#{livroBean.removerAutorDoLivro(itemAtual)}"/>
+						</h:column>
+						
+					
+					</h:dataTable>
+				
+				
+				</fieldset>
+		
+
+				<h:commandButton id="btnGravar" value="Gravar o Livro" action="#{livroBean.gravar}" >
+				
+					<f:ajax execute="@form" render="@form    :formularioTabelaLivros:tabelaLivros"/>
+				
+				</h:commandButton>
+				
+			</h:form>
+		
+		
+		
+		    <br/><br/>
+			
+			<h:form id="formularioTabelaLivros" >		
+			
+				<h:dataTable id="tabelaLivros" value="#{livroBean.livros}" var="itemAtual">
+				
+					<h:column>
+						<f:facet name="header">Titulo</f:facet>
+						<h:outputText value="#{itemAtual.titulo}" />
+					</h:column>
+					
+					
+					<h:column>
+						<f:facet name="header">ISBN</f:facet>
+						<h:outputText value="#{itemAtual.isbn}" />
+					</h:column>
+					
+					
+					<h:column>
+						<f:facet name="header">Preço</f:facet>
+						<h:outputText value="#{itemAtual.preco}">
+						
+							<f:convertNumber id="conversorColunaPreco" type="currency" currencySymbol="R$" locale="pt_BR" pattern="R$ #0.00"  />
+						
+						</h:outputText>
+					</h:column>
+					
+					
+					
+					<h:column>
+						<f:facet name="header">Data de lançamento</f:facet>
+			
+						<h:outputText value="#{itemAtual.dataLancamento.time}">
+							<f:convertDateTime id="conversorColunaData" pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+						
+						</h:outputText>
+					</h:column>
+					
+
+
+					<h:column>
+						<f:facet name="header">Alterar</f:facet>
+				
+						<h:commandLink  value="alterar" action="#{livroBean.carregarOLivroASerAlterado(itemAtual)}"/>
+					</h:column>
+										
+					
+					
+					<h:column>
+						<f:facet name="header">Remover</f:facet>
+						
+						<h:commandLink  value="remover" action="#{livroBean.remover(itemAtual)}"/>
+					</h:column>
+					
+				</h:dataTable>
+				
+			</h:form>
+		
+		</ui:define>
+		
+	</ui:composition>
+
+</html>

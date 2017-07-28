@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html" 
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+
+	<ui:composition template="_template.xhtml">
+
+		<ui:define name="titulo">
+			<h1>Login</h1>
+			
+			<h3>Faça o login para acessar o Sistema da Livraria</h3>
+			
+		</ui:define>
+
+		<ui:define name="conteudo">
+
+			<h:messages id="mensagemDeErroGeral" name="merda" globalOnly="true"/>
+		
+
+			<h:form id="formularioDelogin">
+			
+				<fieldset>
+					<legend>Login</legend>
+
+					<h:panelGrid columns="2">
+					
+						<h:outputLabel         value="E-mail:" for="email" />
+						
+						<h:inputText id="email" value="#{loginBean.usuario.email}" required="true" requiredMessage="Necessario preencher o campo e-mail!" >
+
+							<f:passThroughAttribute name="type" value="email"/>
+
+						</h:inputText>
+						
+					<h:messages id="exibidorMensagemDeErroEmail" for="email"/>
+
+						
+						<h:outputLabel         value="Senha:" for="senha" />
+						
+						<h:inputText id="senha" value="#{loginBean.usuario.senha}" required="true" requiredMessage="Necessario preencher o campo senha!">
+
+							<f:passThroughAttribute name="type" value="password"/>
+						
+						</h:inputText>
+						
+					    <h:messages id="exibidorMensagemDeErroSenha" for="senha"/>	
+	
+						<h:commandButton id="btnLogin"  value="Efetuar Login" action="#{loginBean.efetuarLogin}" />
+						
+					</h:panelGrid>
+	
+				</fieldset>
+			
+			</h:form>
+
+		</ui:define>
+		
+	</ui:composition>
+
+</html>
